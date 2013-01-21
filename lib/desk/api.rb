@@ -1,3 +1,4 @@
+require 'uri'
 require 'desk/connection'
 require 'desk/request'
 require 'desk/authentication'
@@ -18,7 +19,14 @@ module Desk
     end
 
     def endpoint
-      "https://#{self.subdomain}.desk.com/api/#{self.version}/"
+      begin
+        uri = URI.parse(self.subdomain)
+        raise URI::BadURIError unless uri.scheme == 'https'
+        uri.path = "/api/#{self.version}/"
+        uri.to_s
+      rescue
+        "https://#{self.subdomain}.desk.com/api/#{self.version}/"
+      end
     end
 
     include Connection
