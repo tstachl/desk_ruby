@@ -32,6 +32,7 @@ module Desk
           end
         end
         builder.use Faraday::Response::RaiseHttp5xx
+        builder.response(:logger) if ENV['debug']
         builder.adapter(adapter)
       end
     end
